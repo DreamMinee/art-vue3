@@ -1,5 +1,5 @@
 <template>
-    <header class="header container">
+    <header class="header--mobile container--mobile">
         <div class="header__logo">
             <a href="/" class="header__logo-link">
                 <img src="/images/logo.svg" alt="Art" class="header__logo-pic">        
@@ -49,29 +49,29 @@
 
         <footer class="footer--mobile">
             <div class="footer__cards--mobile">
-                <div class="footer__card--mobile footer__card-1--mobile">
-                    <img src="/images/redcard-mobile-pic.svg" alt="Red">             
+                <div class="footer__card--mobile">
+                    <div class="footer__card-1--mobile"></div>             
                 </div> 
-                <div class="footer__card--mobile footer__card-2--mobile">
-                    <img src="/images/digital-mobile-pic.svg" alt="Digital"> 
+                <div class="footer__card--mobile">
+                    <div class="footer__card-2--mobile"></div> 
                 </div>
-                <div class="footer__card--mobile footer__card-3--mobile">
-                    <img src="/images/card3D-mobile-pic.svg" alt="3D"> 
+                <div class="footer__card--mobile">
+                    <div class="footer__card-3--mobile"></div> 
                 </div>
-                <div class="footer__card--mobile footer__card-4--mobile">
-                    <img src="/images/painting-mobile-pic.svg" alt="Painting"> 
+                <div class="footer__card--mobile">
+                    <div class="footer__card-4--mobile"></div>  
                 </div>
-                <div class="footer__card--mobile footer__card-5--mobile">
-                    <img src="/images/art-mobile-pic.svg" alt="Art">
+                <div class="footer__card--mobile">
+                    <div class="footer__card-5--mobile"></div> 
                 </div>
-                <div class="footer__card--mobile footer__card-6--mobile">
-                    <img src="/images/sculpture-mobile-pic.svg" alt="Sculpture"> 
+                <div class="footer__card--mobile">
+                    <div class="footer__card-6--mobile"></div>  
                 </div>
-                <div class="footer__card--mobile footer__card-7--mobile">
-                    <img src="/images/craft-mobile-pic.svg" alt="Craft"> 
+                <div class="footer__card--mobile">
+                    <div class="footer__card-7--mobile"></div> 
                 </div>
-                <div class="footer__card--mobile footer__card-8--mobile">
-                    <img src="/images/darkcard-mobile-pic.svg" alt="Dark"> 
+                <div class="footer__card--mobile">
+                    <div class="footer__card-8--mobile"></div>  
                 </div>
             </div>
         </footer> 
@@ -155,9 +155,8 @@ export default {
 }
 
 body {
-    background-color:#999;
+    background-color: #121212;
     font-family: "Onest Regular", "Arial", sans-serif;
-    padding: 0;
 
 }
 *, *::before, *::after {
@@ -168,7 +167,7 @@ body {
     max-width: 100%;
     margin: auto 40px;
 }
-.header {
+.header--mobile {
     display: flex;
     padding: 32px 0;
     justify-content: space-between;
@@ -253,8 +252,7 @@ body {
     text-transform: uppercase;
     font-family: "Onest Regular", "Arial", sans-serif;
     flex-direction: column;
-    border-radius: 0px 0px 24px 24px;
-    
+    border-radius: 0px 0px 24px 24px; 
 }
 
 .tabs-wrapper {
@@ -266,9 +264,8 @@ body {
     padding: 2px;
     border-radius: 6px;
     height: 40px;
-
-   
 }
+
 .tab-student {
     font-weight: 500;
     font-size: 16px;
@@ -363,56 +360,154 @@ body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-
-
 }
+
 .footer__cards--mobile {
     position: absolute;
     bottom: 0px;
     display: flex;
     width: 100%;
+    height: 100%;
     align-items: flex-end;
     justify-content: flex-start;
-   
+    overflow: hidden;
+
 }
 .footer__card--mobile {
     position: absolute;
-    bottom: 0;
     display: flex;
     margin-left: 0px;
     justify-content: flex-start;
     align-items: flex-end;
 }
 .footer__card-1--mobile {
-    left: -10px;
+    position: absolute;
+    width: 140px;
+    height: 145px;
+    left: -50px;
+    background-image: url("/images/redcard-mobile-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+
+}
+.footer__card-1--mobile:hover {
+    transform: scale(1.2)
 }
 .footer__card-2--mobile {
-    left: -10px ;
+    left: 0px;
     z-index: 100;
+    bottom: -80px;
+    position: absolute;
+    width: 126px;
+    height: 130px;
+    background-image: url("/images/digital-mobile-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+
+}
+.footer__card-2--mobile:hover {
+    transform: scale(1.2)
 }
 .footer__card-3--mobile {
-    left: 10px;
-    z-index: 80;   
+    left: 45px;
+    z-index: 80;
+    bottom: -60px;
+    position: absolute;
+    width: 140px;
+    height: 155px;
+    background-image: url("/images/card3D-mobile-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;   
+}
+.footer__card-3--mobile:hover {
+    transform: scale(1.2)
 }
 .footer__card-4--mobile {
-    left: 75px;
+    left: 120px;
     z-index: 90;
+    bottom: -105px;
+    position: absolute;
+    width: 130px;
+    height: 155px;
+    background-image: url("/images/painting-mobile-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;   
+}
+.footer__card-4--mobile:hover {
+    transform: scale(1.2)
 }
 .footer__card-5--mobile {
-    right: 80px;
+    left: 160px;
     z-index: 70;
+    bottom: -50px;
+    position: absolute;
+    width: 140px;
+    height: 155px;
+    background-image: url("/images/art-mobile-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;   
+
+}
+.footer__card-5--mobile:hover {
+    transform: scale(1.2)
 }
 .footer__card-6--mobile {
-    right: -5px;
+    left: 300px;
     z-index: 100;
+    bottom: -70px;
+    position: absolute;
+    width: 126px;
+    height: 130px;
+    background-image: url("/images/sculpture-mobile-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;   
+}
+.footer__card-6--mobile:hover {
+    transform: scale(1.2)
 }
 .footer__card-7--mobile {
-    right: -5px;
+    left: 230px;
     z-index: 80;
+    bottom: -70px;
+    position: absolute;
+    width: 140px;
+    height: 155px;
+    background-image: url("/images/craft-mobile-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;   
+}
+.footer__card-7--mobile:hover {
+    transform: scale(1.2)
 }
 .footer__card-8--mobile {
-    right: -10px;
-    z-index: -1;
+    position: absolute;
+    left: 370px;
+    z-index: 10;
+    bottom: -10px;
+    width: 126px;
+    height: 130px;
+    background-image: url("/images/darkcard-mobile-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;   
+}
+.footer__card-8--mobile:hover {
+    transform: scale(1.2)
 }
 
 .footer__card--mobile:first-child{
@@ -425,6 +520,7 @@ body {
     bottom: 0;
     min-width: 100%;
     z-index: -100;
+    opacity: 0.6;
 }
 
 </style>

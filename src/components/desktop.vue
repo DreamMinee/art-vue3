@@ -35,9 +35,9 @@
                     </div>
                 </div>
                 <div class="content-wrapper">
-                    <input type="email" placeholder="Email">
+                    <input v-model="email" type="email" placeholder="Email">
                 </div>
-                <button class="button__submit"  type="button">
+                <button @click="submit" class="button__submit"  type="button">
                     Get a benefit <img src="/images/present-icon.svg" alt="Present-icon">
                 </button>
             </div>
@@ -54,34 +54,34 @@
     <footer class="footer">
         <div class="footer__cards">
             <div class="footer__card">
-                <img class="footer__card-1" src="/images/photography-pic.svg" alt="Photography">
+                <div class="footer__card-1"></div>
             </div>
             <div class="footer__card">
-                <img class="footer__card-2" src="/images/art-pic.svg" alt="Art">
+                <div class="footer__card-2"></div>
             </div>
             <div class="footer__card">
-                <img class="footer__card-3" src="/images/drawing-pic.svg" alt="Drawing">
+                <div class="footer__card-3"></div>
             </div>
             <div class="footer__card">
-                <img class="footer__card-4" src="/images/digital-pic.svg" alt="Digital">
+                <div class="footer__card-4"></div>
             </div>
             <div class="footer__card">
-                <img class="footer__card-5" src="/images/painting-pic.svg" alt="Painting">
+                <div class="footer__card-5"></div>
             </div>
             <div class="footer__card">
-                <img class="footer__card-6" src="/images/design-pic.svg" alt="Design">
+                <div class="footer__card-6"></div>
             </div>
             <div class="footer__card">
-                <img class="footer__card-7" src="/images/craft-pic.svg" alt="Craft">
+                <div class="footer__card-7"></div>
             </div>
             <div class="footer__card">
-                <img class="footer__card-8" src="/images/sculpture-pic.svg" alt="Sculpture">
+                <div class="footer__card-8"></div>
             </div>
             <div class="footer__card">
-                <img class="footer__card-9" src="/images/card3D-pic.svg" alt="3D">
+                <div class="footer__card-9"></div>
             </div>
             <div class="footer__card">
-                <img class="footer__card-10" src="/images/illustration-pic.svg" alt="Illustration">
+                <div class="footer__card-10"></div>
             </div>
         </div>
     </footer>
@@ -90,11 +90,22 @@
 </template>
 <script>
 import {ref, onMounted} from "vue"
-
 export default {
     setup() {
+        let email = ref("");
         let position = 0;
         let play = 0;
+        const submit = () => {
+            const key = "6ubxs3fxzhbb7zndd14a6toefmsz84j6q4m6fwfy";
+            const listId = "20647625";
+            const domain = `https://api.unisender.com/ru/api`;
+            const addEmail = `/subscribe?format=json&api_key=${key}&list_ids=${listId}&fields[email]=${email.value}&double_optin=3`;
+            const checkEmail = `/isContactInLists?api_key=${key}&email=${email.value}&list_ids=${listId}&condition=and`;
+            fetch(domain + checkEmail)
+                .then((response) => {
+                    console.log(response.json())
+                })
+        }
         let nextVideo = () => {
             position++;
             if (position >= playlist.length) {
@@ -114,7 +125,7 @@ export default {
             "/video/7.mp4",
             "/video/8.mp4",
             "/video/9.mp4"];
-        let bgVideo = ref();
+        let bgVideo = ref(null);
 
         onMounted(() => {
             setTimeout(() => {
@@ -126,6 +137,8 @@ export default {
         })
 
         return {
+            email,
+            submit,
             bgVideo
         }
     }
@@ -167,7 +180,7 @@ export default {
 }
 
 body {
-    background-color: #999;
+    background-color: #121212;
     font-family: "Onest Regular", "Arial", sans-serif;
 }
 
@@ -393,18 +406,21 @@ body {
 
 .footer__cards {
     display: grid;
-    grid-template-columns: repeat(10, 10%);
+    grid-template-columns: repeat(10, 10vw);
     position: absolute;
+    height:200px;
     bottom: 0px;
-    width: 100%;
+    overflow: hidden;
 }
 
 .footer__card {
     display: flex;
+    height: 100%;
+    width: 100%;
+    position: relative;
     margin-left: 0px;
     justify-content: space-between;
-    bottom: 0;
-    max-width: 100%;
+    
 }
 
 .footer__card:first-child {
@@ -413,79 +429,172 @@ body {
 
 .footer__card-1 {
     z-index: 120;
-    max-width: 100%;
-    margin-top: 60%;
+    width: 100%;
+    height: 100%;
+    margin-top: 90%;
+    background-image: url("/images/photography-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+    
 }
+.footer__card-1:hover {
+    margin-top: 80%;
 
+}
 .footer__card-2 {
+    position: absolute;
     z-index: 110;
-    max-width: 130%;
-    margin-left: -50%;
-    margin-top: 10px;
+    width: 130%;
+    height: 100%;
+    margin-top: 80px;
+    left: -70px;
+    background-image: url("/images/art-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
 }
-
+.footer__card-2:hover {
+    margin-top: 60px;
+}
 .footer__card-3 {
+    position: absolute;
     z-index: 110;
-    max-width: 100%;
-    margin-top: 30%;
-    margin-left: -60%;
+    width: 110%;
+    height: 100%;
+    margin-top: 60%;
+    margin-left: -50%;
+    background-image: url("/images/drawing-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
 }
-
-.footer__card-4 {
-    z-index: 110;
-    max-width: 110%;
-    margin-left: -90%;
+.footer__card-3:hover {
     margin-top: 50%;
-
 }
-
-.footer__card-5 {
+.footer__card-4 {
+    position: absolute;
     z-index: 110;
-    max-width: 160%;
+    width: 110%;
+    height: 100%;
+    margin-left: -65%;
+    margin-top: 80%;
+    left: 10px;
+    background-image: url("/images/digital-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+}
+.footer__card-4:hover {
+    margin-top: 70%;
+}
+.footer__card-5 {
+    position: absolute;
+    z-index: 110;
+    width: 160%;
+    margin-top: 40%;
+    margin-left: -65%;
+    height: 100%;
+    background-image: url("/images/painting-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+}
+.footer__card-5:hover {
     margin-top: 30%;
-    margin-left: -100%;
-
 }
 
 .footer__card-6 {
+    position: absolute;
     z-index: 110;
-    max-width: 130%;
-    margin-top: 60%;
-    margin-left: -50%;
-
-}
-
-.footer__card-7 {
-    z-index: 0;
-    max-width: 150%;
-    margin-top: 0%;
-    margin-left: -48%;
-
-}
-
-.footer__card-8 {
-    z-index: 100;
-    max-width: 100%;
-    margin-top: 60%;
+    width: 130%;
+    height: 100%;
+    margin-top: 70%;
     margin-left: -20%;
+    background-image: url("/images/design-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+}
 
+.footer__card-6:hover {
+    margin-top: 60%;
+}
+.footer__card-7 {
+    position: absolute;
+    z-index: 0;
+    width: 150%;
+    height: 100%;
+    margin-top: 50%;
+    margin-left: -20%;
+    background-image: url("/images/craft-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+}
+
+.footer__card-7:hover {
+    margin-top: 40%;
+}
+.footer__card-8 {
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    margin-top: 85%;
+    margin-left: 10%;
+    background-image: url("/images/sculpture-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+}
+
+.footer__card-8:hover {
+    margin-top: 75%;
 }
 
 .footer__card-9 {
+    position: absolute;
     z-index: 90;
-    max-width: 150%;
-    margin-top: 10%;
-    margin-left: -30%;
+    width: 150%;
+    height: 100%;
+    margin-top: 50%;
+    margin-left: -10%;
+    background-image: url("/images/card3D-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+}
 
+.footer__card-9:hover {
+    margin-top: 40%;
 }
 
 .footer__card-10 {
+    position: absolute;
     z-index: 100;
-    max-width: 100%;
-    margin-top: 50%
-
+    width: 100%;
+    height: 100%;
+    margin-top: 70%;
+    background-image: url("/images/illustration-pic.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
 }
 
+.footer__card-10:hover {
+    margin-top: 60%;
+}
 #myVideo {
     position: fixed;
     right: 0;
@@ -493,7 +602,8 @@ body {
     min-width: 100%;
     min-height: 100%;
     z-index: -100;
-}
+    opacity: 0.6;
+}   
 
 .anim-typewriter {
     animation: typewriter 3s steps(44) 1s 1 normal both,
