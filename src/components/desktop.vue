@@ -101,9 +101,15 @@ export default {
             const domain = `https://api.unisender.com/ru/api`;
             const addEmail = `/subscribe?format=json&api_key=${key}&list_ids=${listId}&fields[email]=${email.value}&double_optin=3`;
             const checkEmail = `/isContactInLists?api_key=${key}&email=${email.value}&list_ids=${listId}&condition=and`;
-            fetch(domain + checkEmail)
-                .then((response) => {
-                    console.log(response.json())
+            fetch(domain + checkEmail,{
+                type: "GET",
+                mode: "no-cors",
+                headers: {
+                    "Access-Control-Allow-Origin":"*"
+                }
+            })
+                .then(async (response) => {
+                
                 })
         }
         let nextVideo = () => {
