@@ -112,68 +112,85 @@
 import {ref, onMounted, reactive} from "vue"
 export default {
     setup() {
-        let form = reactive({
-            inputForm: false,
-            loadingForm: true,
-            successfulForm: false
-        })
-        let email = ref("");
-        let position = 0;
-        let play = 0;
-        const submit = () => {
-            const key = "6ubxs3fxzhbb7zndd14a6toefmsz84j6q4m6fwfy";
-            const listId = "20647625";
-            const domain = `https://api.unisender.com/ru/api`;
-            const addEmail = `/subscribe?format=json&api_key=${key}&list_ids=${listId}&fields[email]=${email.value}&double_optin=3`;
-            const checkEmail = `/isContactInLists?api_key=${key}&email=${email.value}&list_ids=${listId}&condition=and`;
-            fetch(domain + checkEmail,{
-                type: "GET",
-                mode: "no-cors",
-                headers: {
-                    "Access-Control-Allow-Origin":"*"
+    let count = ref(0);
+    let email = ref("");
+    let position = 0;
+    let play = 0;
+    const submit = () => {
+        let formData = new FormData();
+        formData.append('email', email.value);
+        fetch("/check_email.php", {
+            method: 'POST', // or 'PUT'
+            body: formData,
+        }).then(async response => {
+            if(response.ok) {
+                let data = await response.json();
+                if (data.result) {
+                    alert("Данный email уже добавлен");
+                } else {
+                    fetch("/add_email.php", {
+                        method: 'POST', // or 'PUT'
+                        body: formData,
+                    }).then(async (response) => {
+                        let data = await response.json();
+                        console.log(data)
+                    })
                 }
-            })
-                .then(async (response) => {
-                
+                fetch("/count_emails.php", {
+                    method: 'get', // or 'PUT'
+                }).then(async (response) => {
+                    let data = await response.json();
+                    count.value = data.result.count;
                 })
-        }
-        let nextVideo = () => {
-            position++;
-            if (position >= playlist.length) {
-                position = 0;
             }
+
+        })
+    }
+
+    let nextVideo = () => {
+        position++;
+        if (position >= playlist.length) {
+            position = 0;
+        }
+        bgVideo.value.src = playlist[position];
+        bgVideo.value.load();
+        bgVideo.value.play();
+    };
+
+    let playlist = ["/video/1.mp4",
+        "/video/2.mp4",
+        "/video/3.mp4",
+        "/video/4.mp4",
+        "/video/5.mp4",
+        "/video/6.mp4",
+        "/video/7.mp4",
+        "/video/8.mp4",
+        "/video/9.mp4"];
+    let bgVideo = ref(null);
+
+    onMounted(() => {
+        setTimeout(() => {
+            bgVideo.value.addEventListener("ended", nextVideo, false);
             bgVideo.value.src = playlist[position];
             bgVideo.value.load();
             bgVideo.value.play();
-        };
+        }, 1000);
 
-        let playlist = ["/video/1.mp4",
-            "/video/2.mp4",
-            "/video/3.mp4",
-            "/video/4.mp4",
-            "/video/5.mp4",
-            "/video/6.mp4",
-            "/video/7.mp4",
-            "/video/8.mp4",
-            "/video/9.mp4"];
-        let bgVideo = ref(null);
-
-        onMounted(() => {
-            setTimeout(() => {
-                bgVideo.value.addEventListener("ended", nextVideo, false);
-                bgVideo.value.src = playlist[position];
-                bgVideo.value.load();
-                bgVideo.value.play();
-            }, 1000);
+        fetch("/count_emails.php", {
+            method: 'get', // or 'PUT'
+        }).then(async (response) => {
+             let data = await response.json();
+             count.value = data.result.count;
         })
+    })
 
-        return {
-            email,
-            submit,
-            bgVideo,
-            form
-        }
+    return {
+        email,
+        submit,
+        bgVideo,
+        count
     }
+}
 }
 
 </script>
