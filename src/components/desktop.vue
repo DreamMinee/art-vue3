@@ -22,7 +22,7 @@
             </p>
         </section>
         <section class="registration-form">
-            <div class="users-form">
+            <div v-if="form.inputForm" class="users-form">
                 <div class="registration-form__label">
                     Incredible benefits for early students and teachers
                 </div>
@@ -41,6 +41,26 @@
                     Get a benefit <img src="/images/present-icon.svg" alt="Present-icon">
                 </button>
             </div>
+            <div v-if="form.loadingForm" class="users-form">
+                <div class ="users-form-loadingForm">
+                    <img src="/images/green-icon.svg" alt="green icon">   
+                <div class="registration-form__label">
+                    Thank you!
+                <div class="registration-form__label2">
+                    We got your response and will contact to you to give you extra benefits.
+                </div>   
+                </div>
+            </div>
+            </div>
+            <div v-if="form.successfulForm" class="users-form">
+                <div class="users-form-successfulForm">
+                    <img src="/images/blue-icon.svg" alt="blue icon">
+                <div class="registration-form__label">
+                    We are so excited to see you on our platform!
+                    We’ve already got your response and will send you the benefits as soon as possible.
+                </div>
+            </div>
+            </div>
             <div class="counter">
                 <div class="counter__number">
                     986
@@ -48,7 +68,7 @@
                 <div class="counter__label">
                     Places left
                 </div>
-            </div>
+            </div>    
         </section>
     </main>
     <footer class="footer">
@@ -89,9 +109,14 @@
     </video>
 </template>
 <script>
-import {ref, onMounted} from "vue"
+import {ref, onMounted, reactive} from "vue"
 export default {
     setup() {
+        let form = reactive({
+            inputForm: false,
+            loadingForm: true,
+            successfulForm: false
+        })
         let email = ref("");
         let position = 0;
         let play = 0;
@@ -145,7 +170,8 @@ export default {
         return {
             email,
             submit,
-            bgVideo
+            bgVideo,
+            form
         }
     }
 }
@@ -268,6 +294,48 @@ body {
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
     padding: 20px;
+}
+
+.users-form-loadingForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 27px;
+    width: 100%;
+    height: 100%;
+    
+    
+}
+.registration-form__label {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 27px;
+
+}
+.registration-form__label2 {
+    display: flex;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+}
+
+
+.users-form-successfulForm {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 27px;
+    width: 100%;
+    height: 100%;
+    
+
 }
 
 .counter {
