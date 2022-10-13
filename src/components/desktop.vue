@@ -80,34 +80,54 @@
     <footer class="footer">
         <div class="footer__cards">
             <div class="footer__card">
-                <div class="footer__card-1"></div>
+                <div class="footer__card-1">
+                    <p>Photograthy</p>
+                </div>
             </div>
             <div class="footer__card">
-                <div class="footer__card-2"></div>
+                <div class="footer__card-2">
+                    <p>Art</p>
+                </div>
             </div>
             <div class="footer__card">
-                <div class="footer__card-3"></div>
+                <div class="footer__card-3">
+                    <p>Drawing</p>
+                </div>
             </div>
             <div class="footer__card">
-                <div class="footer__card-4"></div>
+                <div class="footer__card-4">
+                    <p>Digital</p>
+                </div>
             </div>
             <div class="footer__card">
-                <div class="footer__card-5"></div>
+                <div class="footer__card-5">
+                    <p>Painting</p>
+                </div>
             </div>
             <div class="footer__card">
-                <div class="footer__card-6"></div>
+                <div class="footer__card-6">
+                    <p>Design</p>
+                </div>
             </div>
             <div class="footer__card">
-                <div class="footer__card-7"></div>
+                <div class="footer__card-7">
+                    <p>Craft</p>
+                </div>
             </div>
             <div class="footer__card">
-                <div class="footer__card-8"></div>
+                <div class="footer__card-8">
+                    <p>Sculpture</p>
+                </div>
             </div>
             <div class="footer__card">
-                <div class="footer__card-9"></div>
+                <div class="footer__card-9">
+                    <p>3D</p>
+                </div>
             </div>
             <div class="footer__card">
-                <div class="footer__card-10"></div>
+                <div class="footer__card-10">
+                    <p>Illustration</p>
+                </div>
             </div>
         </div>
     </footer>
@@ -172,15 +192,15 @@ export default {
         bgVideo.value.play();
     };
 
-    let playlist = ["/video/1.mp4",
-        "/video/2.mp4",
-        "/video/3.mp4",
-        "/video/4.mp4",
-        "/video/5.mp4",
-        "/video/6.mp4",
-        "/video/7.mp4",
-        "/video/8.mp4",
-        "/video/9.mp4"];
+    let playlist = ["/video/1mobile.mp4",
+        "/video/2mobile.mp4",
+        "/video/3mobile.mp4",
+        "/video/4mobile.mp4",
+        "/video/5mobile.mp4",
+        "/video/6mobile.mp4",
+        "/video/7mobile.mp4",
+        "/video/8mobile.mp4",
+        "/video/9mobile.mp4"];
     let bgVideo = ref(null);
 
     onMounted(() => {
@@ -194,8 +214,8 @@ export default {
         fetch("/count_emails.php", {
             method: 'get', // or 'PUT'
         }).then(async (response) => {
-             let data = await response.json();
-             count.value = data.result.count;
+            let data = await response.json();
+            count.value = data.result.count;
         })
     })
 
@@ -563,79 +583,98 @@ body {
     z-index: 120;
     width: 100%;
     height: 100%;
-    margin-top: 90%;
-    background-image: url("/images/photography-pic.svg");
+    margin-top: 70%;
+    background: url("/images/photography.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
-    
+    border-radius: 16px;
+    transform: rotate(7.01deg);
 }
 .footer__card-1:hover {
-    margin-top: 80%;
+    margin-top: 60%;
 
 }
 .footer__card-2 {
     position: absolute;
-    z-index: 110;
-    width: 130%;
+    z-index: 90;
+    width: 100%;
     height: 100%;
-    margin-top: 80px;
-    left: -70px;
-    background-image: url("/images/art-pic.svg");
+    margin-top: 20%;
+    left: -10%;
+    background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    border-radius: 16px;
+    transform: rotate(-9.82deg);
+    background: #1B53D6;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 40px;
+    color: #FFFFFF;
+    
+
 }
 .footer__card-2:hover {
-    margin-top: 60px;
+    margin-top: 10%;
 }
 .footer__card-3 {
     position: absolute;
-    z-index: 110;
-    width: 110%;
+    z-index: 130;
+    width: 100%;
     height: 100%;
-    margin-top: 60%;
-    margin-left: -50%;
-    background-image: url("/images/drawing-pic.svg");
+    margin-top: 40%;
+    margin-left: -20%;
+    background-image: url("/images/drawing.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    border-radius: 16px;
+    transform: rotate(-7.37deg);
+    color: #FFFFFF;
 }
 .footer__card-3:hover {
-    margin-top: 50%;
+    margin-top: 30%;
 }
 .footer__card-4 {
     position: absolute;
-    z-index: 110;
+    z-index: 140;
     width: 110%;
     height: 100%;
-    margin-left: -65%;
-    margin-top: 80%;
-    left: 10px;
-    background-image: url("/images/digital-pic.svg");
+    margin-left: -25%;
+    margin-top: 60%;
+    background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    background: #B5448E;
+    border-radius: 24px;
+    transform: rotate(6.11deg);
+    color: #FFFFFF;
 }
 .footer__card-4:hover {
-    margin-top: 70%;
+    margin-top: 50%;
 }
 .footer__card-5 {
     position: absolute;
-    z-index: 110;
-    width: 160%;
-    margin-top: 40%;
-    margin-left: -65%;
+    z-index: 150;
+    width: 100%;
     height: 100%;
-    background-image: url("/images/painting-pic.svg");
+    margin-top: 40%;
+    margin-left: -15%;
+    background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    border-radius: 16px;
+    transform: rotate(-6.52deg);
+    
 }
 .footer__card-5:hover {
     margin-top: 30%;
@@ -644,15 +683,18 @@ body {
 .footer__card-6 {
     position: absolute;
     z-index: 110;
-    width: 130%;
+    width: 100%;
     height: 100%;
     margin-top: 70%;
-    margin-left: -20%;
-    background-image: url("/images/design-pic.svg");
+    margin-left: -10%;
+    background-image: url("/images/design.png.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    border-radius: 16px;
+    transform: rotate(0.54deg);
+    color: #FFFFFF;
 }
 
 .footer__card-6:hover {
@@ -661,15 +703,21 @@ body {
 .footer__card-7 {
     position: absolute;
     z-index: 0;
-    width: 150%;
+    width: 120%;
     height: 100%;
     margin-top: 50%;
-    margin-left: -20%;
-    background-image: url("/images/craft-pic.svg");
+    margin-left: -10%;
+    background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    border-radius: 16px;
+    transform: rotate(7.01deg);
+    background: #F45E41;
+    border-radius: 32px;
+    transform: rotate(11.68deg);
+    color: #FFFFFF;
 }
 
 .footer__card-7:hover {
@@ -680,31 +728,37 @@ body {
     z-index: 100;
     width: 100%;
     height: 100%;
-    margin-top: 85%;
+    margin-top: 70%;
     margin-left: 10%;
-    background-image: url("/images/sculpture-pic.svg");
+    background-image: url("/images/sculpture.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    border-radius: 16px;
+    transform: rotate(-1.49deg);
+    color: #FFFFFF;
 }
 
 .footer__card-8:hover {
-    margin-top: 75%;
+    margin-top: 60%;
 }
 
 .footer__card-9 {
     position: absolute;
     z-index: 90;
-    width: 150%;
+    width: 100%;
     height: 100%;
     margin-top: 50%;
-    margin-left: -10%;
-    background-image: url("/images/card3D-pic.svg");
+    margin-left: 10%;
+    background-image: url("/images/card3D.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    border-radius: 32px;
+    transform: rotate(4.46deg);
+    color: #FFFFFF;
 }
 
 .footer__card-9:hover {
@@ -717,11 +771,15 @@ body {
     width: 100%;
     height: 100%;
     margin-top: 70%;
-    background-image: url("/images/illustration-pic.svg");
+    background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    background: #FFB838;
+    border-radius: 24px;
+    transform: rotate(10.21deg);
+    color: #FFFFFF;
 }
 
 .footer__card-10:hover {

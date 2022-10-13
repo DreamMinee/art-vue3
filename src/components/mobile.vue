@@ -19,9 +19,9 @@
                         for creative people
                     </p>
             </section>
-            <section class="registration-form--mobile">
+            <section v-if="form.inputForm" class="registration-form--mobile">
                 <div class="users-form--mobile">
-                     <div class="registration-form__label">
+                    <div class="registration-form__label">
                         <p><span>Incredible benefits</span> for early students and teachers</p>
                     </div>
                     <div class="tabs-wrapper">
@@ -31,22 +31,62 @@
                         <div class="tab-teacher">
                             I'am teacher 
                         </div>          
-                    </div>     
+                    </div>    
                     <div class="content-wrapper">
                         <input type="email" placeholder="Email">        
                     </div> 
                     <button class="button__submit" type="button">
                         Get a benefit <img src="/images/present-icon.svg" alt="Present-icon">
                     </button> 
-                </div> 
+                </div>
                 <div class="counter--mobile">
                     <div class="counter__number">
                         Places left 986! 
                     </div>
                 </div>
+                
             </section>
-        </main>
+            <section v-if="form.loadingForm" class="loading-form--mobile">
+                <div class="users-form--mobile">
+                    <div class="loading-form__label">
+                            <img src="/images/green-icon.svg" alt="green icon">
+                        <div class="loading-form__title">
+                            Thank you!
+                        </div>
+                        <div class="loading-form__subtitle">
+                            We got your response and will contact to you to give you extra benefits.
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="counter--mobile">
+                    <div class="counter__number">
+                        Places left 986! 
+                    </div>
+                </div>
+                
+            </section>
+            <section v-if="form.successfulForm" class="successful-form--mobile">
+                <div class="users-form--mobile">
+                    <div class="successful-form__label">
+                            <img src="/images/blue-icon.svg" alt="blue icon">
+                        <div class="successful-form__title">
+                        We are so excited to see you on our platform! 
+                    </div>     
+                        <div class="successful-form__subtitle">
+                        We’ve already got your response and will send you the benefits as soon as possible.
+                        </div>
+                    </div>
+                </div>
+                <div class="counter--mobile">
+                    <div class="counter__number">
+                        Places left 986! 
+                    </div>
+                </div>
+                
+            </section>
 
+        </main>
         <footer class="footer--mobile">
             <div class="footer__cards--mobile">
                 <div class="footer__card--mobile">
@@ -83,6 +123,13 @@
 import { ref, onMounted } from "vue"
 export default {
     setup() {
+        let count = ref(0);
+        let email = ref("");
+        const form = {
+        inputForm: false,
+        loadingForm: false,
+        successfulForm: true
+        }
         let position = 0;
         let play = 0;
         let nextVideo = () => {
@@ -116,7 +163,8 @@ export default {
         })
 
         return {
-            bgVideo
+            bgVideo,
+            form
         }
     }
 }
@@ -236,6 +284,73 @@ body {
     height: 284px;
     border-radius: 25px 25px 0 0;
     padding: 20px;
+}
+.loading-form__label {
+    display: flex;
+    justify-content: left;
+    background-color: transparent;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+ 
+}
+.loading-form__title {
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 27px;
+    color: #F8F9F9;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+   
+
+    
+}
+.loading-form__subtitle {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    color: #E8EBEB;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+}
+.successful-form__label {
+    display: flex;
+    justify-content: left;
+    background-color: transparent;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 27px;
+}
+
+.successful-form__title {
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 27px;
+    color: #F8F9F9;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+}
+
+.successful-form__subtitle {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    color: #E8EBEB;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 .counter--mobile {
