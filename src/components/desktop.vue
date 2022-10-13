@@ -35,13 +35,16 @@
                     </div>
                 </div>
                 <div class="content-wrapper">
-                    <input v-model="email" type="email" placeholder="Email">
+                    <input type="email" v-model="v$.email.$model">
+                    <div class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
+                        <div class="error-msg">{{ error.$message }}</div>
+                    </div>
                 </div>
-                <button @click="submit" class="button__submit"  type="button">
+                <button :disabled="v$.email.$errors.length" @click="submit" class="button__submit"  type="button">
                     Get a benefit <img src="/images/present-icon.svg" alt="Present-icon">
                 </button>
             </div>
-            <div v-if="form.loadingForm" class="users-form__loading">
+            <div v-if="form.successfulForm" class="users-form__loading">
                 <div class ="users-form-loadingForm">
                     <img src="/images/green-icon.svg" alt="green icon">
                     <div class="users-form__benefit">
@@ -54,7 +57,7 @@
                     </div>
             </div>
             </div>
-            <div v-if="form.successfulForm" class="users-form__succsessful">
+            <div v-if="form.existingForm" class="users-form__succsessful">
                 <div class="users-form-successfulForm">
                     <img src="/images/blue-icon.svg" alt="blue icon">
                     <div class="users-form__success">
@@ -135,100 +138,120 @@
     </video>
 </template>
 <script>
-import {ref, onMounted, reactive} from "vue"
+import {ref, onMounted, computed, reactive} from "vue"
+import { useVuelidate } from '@vuelidate/core'
+import { required, email, helpers } from '@vuelidate/validators'
 export default {
     setup() {
-    let count = ref(0);
-    let email = ref("");
-    const form = {
-        inputForm: true,
-        loadingForm: false,
-        successfulForm: false
-    }
-    let position = 0;
-    let play = 0;
-    const submit = () => {
-        let formData = new FormData();
-        formData.append('email', email.value);
-        fetch("/check_email.php", {
-            method: 'POST', // or 'PUT'
-            body: formData,
-        }).then(async response => {
-            if(response.ok) {
-                form.inputForm.value = false;
-                form.loadingForm.value = true;
-                let data = await response.json();
-                if (data.result) {
-                    alert("Данный email уже добавлен");
-                } else {
-                    fetch("/add_email.php", {
-                        method: 'POST', // or 'PUT'
-                        body: formData,
+        let count = ref(0);
+
+        const state = reactive({
+            email: '',
+        })
+
+        const rules = computed(() => {
+            const localRules = {
+                email: {
+                    required: helpers.withMessage("The form must be filled in", required),
+                    email: helpers.withMessage("The form is filled incorrectly", email),
+                },
+            };
+
+            return localRules;
+        });
+
+        const v$ = useVuelidate(rules, state);
+
+        const form = reactive({
+            inputForm: true,
+            existingForm: false,
+            successfulForm: false
+        });
+
+        let position = 0;
+        let play = 0;
+        const submit = () => {
+            let formData = new FormData();
+            formData.append('email', state.email);
+            fetch("/check_email.php", {
+                method: 'POST', // or 'PUT'
+                body: formData,
+            }).then(async response => {
+                if(response.ok) {
+                    let data = await response.json();
+                    if (data.result) {
+                        form.inputForm = false;
+                        form.existingForm = true;
+                    } else {
+                        fetch("/add_email.php", {
+                            method: 'POST', // or 'PUT'
+                            body: formData,
+                        }).then(async (response) => {
+                            let data = await response.json();
+                            console.log(data)
+                            form.inputForm = false;
+                            form.existingForm = false;
+                            form.successfulForm = true;
+                        })
+                    }
+                    fetch("/count_emails.php", {
+                        method: 'get', // or 'PUT'
                     }).then(async (response) => {
                         let data = await response.json();
-                        console.log(data)
-                        form.loadingForm.value = false;
-                        form.successfulForm.value = true;
+                        count.value = data.result.count;
                     })
                 }
-                fetch("/count_emails.php", {
-                    method: 'get', // or 'PUT'
-                }).then(async (response) => {
-                    let data = await response.json();
-                    count.value = data.result.count;
-                })
-            }
 
-        })
-    }
-
-    let nextVideo = () => {
-        position++;
-        if (position >= playlist.length) {
-            position = 0;
+            })
         }
-        bgVideo.value.src = playlist[position];
-        bgVideo.value.load();
-        bgVideo.value.play();
-    };
 
-    let playlist = ["/video/1mobile.mp4",
-        "/video/2mobile.mp4",
-        "/video/3mobile.mp4",
-        "/video/4mobile.mp4",
-        "/video/5mobile.mp4",
-        "/video/6mobile.mp4",
-        "/video/7mobile.mp4",
-        "/video/8mobile.mp4",
-        "/video/9mobile.mp4"];
-    let bgVideo = ref(null);
-
-    onMounted(() => {
-        setTimeout(() => {
-            bgVideo.value.addEventListener("ended", nextVideo, false);
+        let nextVideo = () => {
+            position++;
+            if (position >= playlist.length) {
+                position = 0;
+            }
             bgVideo.value.src = playlist[position];
             bgVideo.value.load();
             bgVideo.value.play();
-        }, 1000);
+        };
 
-        fetch("/count_emails.php", {
-            method: 'get', // or 'PUT'
-        }).then(async (response) => {
-            let data = await response.json();
-            count.value = data.result.count;
+        let playlist = ["/video/1mobile.mp4",
+            "/video/2mobile.mp4",
+            "/video/3mobile.mp4",
+            "/video/4mobile.mp4",
+            "/video/5mobile.mp4",
+            "/video/6mobile.mp4",
+            "/video/7mobile.mp4",
+            "/video/8mobile.mp4",
+            "/video/9mobile.mp4"];
+        let bgVideo = ref(null);
+
+        onMounted(() => {
+            setTimeout(() => {
+                bgVideo.value.addEventListener("ended", nextVideo, false);
+                bgVideo.value.src = playlist[position];
+                bgVideo.value.load();
+                bgVideo.value.play();
+            }, 1000);
+
+            fetch("/count_emails.php", {
+                method: 'get', // or 'PUT'
+            }).then(async (response) => {
+                let data = await response.json();
+                count.value = data.result.count;
+            })
         })
-    })
 
-    return {
-        email,
-        submit,
-        bgVideo,
-        form,
-        count
+        return {
+            state, v$,
+            email,
+            submit,
+            bgVideo,
+            form,
+            count
+        }
     }
 }
-}
-
 </script>
 <style>
 @font-face {
@@ -335,6 +358,10 @@ body {
     font-weight: 500;
     font-size: 16px;
     line-height: 26px;
+}
+
+.error-msg {
+    color: #fff
 }
 
 .users-form, .users-form__loading, .users-form__succsessful{
@@ -498,10 +525,10 @@ body {
 
 .content-wrapper {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 1rem;
+    margin: 1rem;
 }
 
 .content-wrapper input {
@@ -552,29 +579,40 @@ body {
     flex-wrap: nowrap;
     background-color: transparent;
     justify-content: center;
-    padding: 0;
     align-content: flex-end;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
+
 }
 
 .footer__cards {
     display: grid;
     grid-template-columns: repeat(10, 10vw);
     position: absolute;
-    height:200px;
+    height: 30vh;
     bottom: 0px;
-    overflow: hidden;
+    margin-bottom: -15vh;
+
+
 }
 
 .footer__card {
     display: flex;
     height: 100%;
-    width: 100%;
+    width: 10vw;
     position: relative;
     margin-left: 0px;
     justify-content: space-between;
-    
-}
 
+}
+.footer__card p {
+    margin: 2rem;
+}
+.footer__card-2 {
+    margin: 1.5rem;
+}
 .footer__card:first-child {
     margin-left: 0;
 }
@@ -583,7 +621,6 @@ body {
     z-index: 120;
     width: 100%;
     height: 100%;
-    margin-top: 70%;
     background: url("/images/photography.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -591,9 +628,13 @@ body {
     transition: all .5s ease;
     border-radius: 16px;
     transform: rotate(7.01deg);
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
+    color: #FFFFFF;
 }
 .footer__card-1:hover {
-    margin-top: 60%;
+    margin-top: -10%;
 
 }
 .footer__card-2 {
@@ -601,7 +642,6 @@ body {
     z-index: 90;
     width: 100%;
     height: 100%;
-    margin-top: 20%;
     left: -10%;
     background-image: url("/images/painting.svg");
     background-size: contain;
@@ -615,18 +655,17 @@ body {
     font-size: 32px;
     line-height: 40px;
     color: #FFFFFF;
-    
-
 }
+
 .footer__card-2:hover {
-    margin-top: 10%;
+    margin-top: -10%;
+
 }
 .footer__card-3 {
     position: absolute;
     z-index: 130;
     width: 100%;
     height: 100%;
-    margin-top: 40%;
     margin-left: -20%;
     background-image: url("/images/drawing.svg");
     background-size: contain;
@@ -635,10 +674,13 @@ body {
     transition: all .5s ease;
     border-radius: 16px;
     transform: rotate(-7.37deg);
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
     color: #FFFFFF;
 }
 .footer__card-3:hover {
-    margin-top: 30%;
+    margin-top: -10%;
 }
 .footer__card-4 {
     position: absolute;
@@ -646,7 +688,6 @@ body {
     width: 110%;
     height: 100%;
     margin-left: -25%;
-    margin-top: 60%;
     background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -655,29 +696,33 @@ body {
     background: #B5448E;
     border-radius: 24px;
     transform: rotate(6.11deg);
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
     color: #FFFFFF;
 }
 .footer__card-4:hover {
-    margin-top: 50%;
+    margin-top: -10%;
 }
 .footer__card-5 {
     position: absolute;
     z-index: 150;
     width: 100%;
     height: 100%;
-    margin-top: 40%;
     margin-left: -15%;
-    background-image: url("/images/painting.svg");
     background-size: contain;
-    background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
     border-radius: 16px;
     transform: rotate(-6.52deg);
-    
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
+    background: linear-gradient(179.29deg, rgba(0, 0, 0, 0.7) 3.55%, rgba(0, 0, 0, 0) 65.43%), url("/images/painting.svg") no-repeat center;
+    color: #fff;
 }
 .footer__card-5:hover {
-    margin-top: 30%;
+    margin-top: -10%;
 }
 
 .footer__card-6 {
@@ -685,7 +730,6 @@ body {
     z-index: 110;
     width: 100%;
     height: 100%;
-    margin-top: 70%;
     margin-left: -10%;
     background-image: url("/images/design.png.svg");
     background-size: contain;
@@ -694,18 +738,20 @@ body {
     transition: all .5s ease;
     border-radius: 16px;
     transform: rotate(0.54deg);
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
     color: #FFFFFF;
 }
 
 .footer__card-6:hover {
-    margin-top: 60%;
+    margin-top: -10%;
 }
 .footer__card-7 {
     position: absolute;
     z-index: 0;
     width: 120%;
     height: 100%;
-    margin-top: 50%;
     margin-left: -10%;
     background-image: url("/images/painting.svg");
     background-size: contain;
@@ -717,18 +763,20 @@ body {
     background: #F45E41;
     border-radius: 32px;
     transform: rotate(11.68deg);
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 40px;
     color: #FFFFFF;
 }
 
 .footer__card-7:hover {
-    margin-top: 40%;
+    margin-top: -10%;
 }
 .footer__card-8 {
     position: absolute;
     z-index: 100;
     width: 100%;
     height: 100%;
-    margin-top: 70%;
     margin-left: 10%;
     background-image: url("/images/sculpture.svg");
     background-size: contain;
@@ -737,11 +785,14 @@ body {
     transition: all .5s ease;
     border-radius: 16px;
     transform: rotate(-1.49deg);
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
     color: #FFFFFF;
 }
 
 .footer__card-8:hover {
-    margin-top: 60%;
+    margin-top: -10%;
 }
 
 .footer__card-9 {
@@ -749,7 +800,6 @@ body {
     z-index: 90;
     width: 100%;
     height: 100%;
-    margin-top: 50%;
     margin-left: 10%;
     background-image: url("/images/card3D.svg");
     background-size: contain;
@@ -758,11 +808,14 @@ body {
     transition: all .5s ease;
     border-radius: 32px;
     transform: rotate(4.46deg);
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 40px;
     color: #FFFFFF;
 }
 
 .footer__card-9:hover {
-    margin-top: 40%;
+    margin-top: -10%;
 }
 
 .footer__card-10 {
@@ -770,7 +823,6 @@ body {
     z-index: 100;
     width: 100%;
     height: 100%;
-    margin-top: 70%;
     background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -779,11 +831,14 @@ body {
     background: #FFB838;
     border-radius: 24px;
     transform: rotate(10.21deg);
-    color: #FFFFFF;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
+    color: #121212;
 }
 
 .footer__card-10:hover {
-    margin-top: 60%;
+    margin-top: -10%;
 }
 #myVideo {
     position: fixed;

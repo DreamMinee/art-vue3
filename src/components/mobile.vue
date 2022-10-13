@@ -32,21 +32,24 @@
                             I'am teacher 
                         </div>          
                     </div>    
-                    <div class="content-wrapper">
-                        <input type="email" placeholder="Email">        
+                    <div class="content-wrapper--mobile">
+                        <input type="email" v-model="v$.email.$model">
+                        <div class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
+                            <div class="error-msg">{{ error.$message }}</div>
+                        </div>
                     </div> 
-                    <button class="button__submit" type="button">
+                    <button :disabled="v$.email.$errors.length" @click="submit" class="button__submit" type="button">
                         Get a benefit <img src="/images/present-icon.svg" alt="Present-icon">
                     </button> 
                 </div>
                 <div class="counter--mobile">
                     <div class="counter__number">
-                        Places left 986! 
+                        Places left {{ 986 - count }}!
                     </div>
                 </div>
                 
             </section>
-            <section v-if="form.loadingForm" class="loading-form--mobile">
+            <section v-if="form.successfulForm" class="loading-form--mobile">
                 <div class="users-form--mobile">
                     <div class="loading-form__label">
                             <img src="/images/green-icon.svg" alt="green icon">
@@ -66,7 +69,7 @@
                 </div>
                 
             </section>
-            <section v-if="form.successfulForm" class="successful-form--mobile">
+            <section v-if="form.existingForm" class="successful-form--mobile">
                 <div class="users-form--mobile">
                     <div class="successful-form__label">
                             <img src="/images/blue-icon.svg" alt="blue icon">
@@ -120,21 +123,76 @@
         </video>
 </template>
 <script>
-import { ref, onMounted } from "vue"
+import {ref, onMounted, computed, reactive} from "vue"
+import { useVuelidate } from '@vuelidate/core'
+import { required, email, helpers } from '@vuelidate/validators'
 export default {
     setup() {
         let count = ref(0);
-        let email = ref("");
-        const form = {
-        inputForm: false,
-        loadingForm: false,
-        successfulForm: true
-        }
+
+        const state = reactive({
+            email: '',
+        })
+
+        const rules = computed(() => {
+            const localRules = {
+                email: {
+                    required: helpers.withMessage("The form must be filled in", required),
+                    email: helpers.withMessage("The form is filled incorrectly", email),
+                },
+            };
+
+            return localRules;
+        });
+
+        const v$ = useVuelidate(rules, state);
+
+        const form = reactive({
+            inputForm: true,
+            existingForm: false,
+            successfulForm: false
+        });
+
         let position = 0;
         let play = 0;
+        const submit = () => {
+            let formData = new FormData();
+            formData.append('email', state.email);
+            fetch("/check_email.php", {
+                method: 'POST', // or 'PUT'
+                body: formData,
+            }).then(async response => {
+                if(response.ok) {
+                    let data = await response.json();
+                    if (data.result) {
+                        form.inputForm = false;
+                        form.existingForm = true;
+                    } else {
+                        fetch("/add_email.php", {
+                            method: 'POST', // or 'PUT'
+                            body: formData,
+                        }).then(async (response) => {
+                            let data = await response.json();
+                            console.log(data)
+                            form.inputForm = false;
+                            form.existingForm = false;
+                            form.successfulForm = true;
+                        })
+                    }
+                    fetch("/count_emails.php", {
+                        method: 'get', // or 'PUT'
+                    }).then(async (response) => {
+                        let data = await response.json();
+                        count.value = data.result.count;
+                    })
+                }
+
+            })
+        }
+
         let nextVideo = () => {
             position++;
-            if(position >= playlist.length) {
+            if (position >= playlist.length) {
                 position = 0;
             }
             bgVideo.value.src = playlist[position];
@@ -142,16 +200,16 @@ export default {
             bgVideo.value.play();
         };
 
-        let playlist = ["/video/1.mp4",
-            "/video/2.mp4",
-            "/video/3.mp4",
-            "/video/4.mp4",
-            "/video/5.mp4",
-            "/video/6.mp4",
-            "/video/7.mp4",
-            "/video/8.mp4",
-            "/video/9.mp4"];
-        let bgVideo = ref();
+        let playlist = ["/video/1mobile.mp4",
+            "/video/2mobile.mp4",
+            "/video/3mobile.mp4",
+            "/video/4mobile.mp4",
+            "/video/5mobile.mp4",
+            "/video/6mobile.mp4",
+            "/video/7mobile.mp4",
+            "/video/8mobile.mp4",
+            "/video/9mobile.mp4"];
+        let bgVideo = ref(null);
 
         onMounted(() => {
             setTimeout(() => {
@@ -160,15 +218,25 @@ export default {
                 bgVideo.value.load();
                 bgVideo.value.play();
             }, 1000);
+
+            fetch("/count_emails.php", {
+                method: 'get', // or 'PUT'
+            }).then(async (response) => {
+                let data = await response.json();
+                count.value = data.result.count;
+            })
         })
 
         return {
+            state, v$,
+            email,
+            submit,
             bgVideo,
-            form
+            form,
+            count
         }
     }
 }
-
 </script>
 <style>
 
@@ -213,11 +281,11 @@ body {
 }
 .container--mobile {
     max-width: 100%;
-    margin: auto 40px;
+    margin: auto 20px;
 }
 .header--mobile {
     display: flex;
-    padding: 32px 0;
+    padding: 10px 0;
     justify-content: space-between;
     align-items: center;
     
@@ -242,6 +310,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+
 }
 
 .main__title--mobile {
@@ -250,7 +319,7 @@ body {
     font-size: 40px;
     line-height: 52px;
     color: #fff;
-    margin-bottom: 0;
+    margin: 0;
     text-align: center;
 }
 
@@ -261,6 +330,7 @@ body {
     text-align: center;
     width: 80%;
     font-weight: 400;
+    margin: 10px;
 }
 .registration-form--mobile {
     display: flex;
@@ -281,9 +351,9 @@ body {
 }
 .users-form--mobile {
     background:rgba(18, 18, 18, 0.7);
-    height: 284px;
+    height: 320px;
     border-radius: 25px 25px 0 0;
-    padding: 20px;
+    padding: 15px;
 }
 .loading-form__label {
     display: flex;
@@ -422,16 +492,15 @@ body {
     margin-bottom: 1rem;
     
 }
-.content-wrapper {
+.content-wrapper--mobile {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 1rem;
-    
-    
+    margin: 1rem;
+
 }
-.content-wrapper input {
+.content-wrapper--mobile input {
     background-color: transparent;
     border: 2px solid #414141;
     width: 100%;
@@ -459,7 +528,7 @@ body {
     margin-top: 10px;
     margin-bottom: 15px;
     width: 100%;
-    height: 56px;
+    height: 50px;
     border-radius: 8px;
     background-color: #76B525;
     font-weight: 700;
@@ -482,7 +551,7 @@ body {
     bottom: 0px;
     display: flex;
     width: 100%;
-    height: 100%;
+    height: 20vh;
     align-items: flex-end;
     justify-content: flex-start;
     overflow: hidden;
