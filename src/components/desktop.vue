@@ -41,29 +41,35 @@
                     Get a benefit <img src="/images/present-icon.svg" alt="Present-icon">
                 </button>
             </div>
-            <div v-if="form.loadingForm" class="users-form">
+            <div v-if="form.loadingForm" class="users-form__loading">
                 <div class ="users-form-loadingForm">
-                    <img src="/images/green-icon.svg" alt="green icon">   
-                <div class="registration-form__label">
-                    Thank you!
-                <div class="registration-form__label2">
-                    We got your response and will contact to you to give you extra benefits.
-                </div>   
-                </div>
+                    <img src="/images/green-icon.svg" alt="green icon">
+                    <div class="users-form__benefit">
+                        <div class="users-form__title">
+                            Thank you!
+                        </div>
+                        <div class="users-form__subtitle">
+                            We got your response and will contact to you to give you extra benefits.
+                        </div>
+                    </div>
             </div>
             </div>
-            <div v-if="form.successfulForm" class="users-form">
+            <div v-if="form.successfulForm" class="users-form__succsessful">
                 <div class="users-form-successfulForm">
                     <img src="/images/blue-icon.svg" alt="blue icon">
-                <div class="registration-form__label">
-                    We are so excited to see you on our platform!
-                    We’ve already got your response and will send you the benefits as soon as possible.
+                    <div class="users-form__success">
+                        <div class="users-form__success-title">
+                            We are so excited to see you on our platform!
+                        </div>
+                        <div class="users-form__success-subtitle">
+                            We’ve already got your response and will send you the benefits as soon as possible.
+                        </div>
+                    </div>
                 </div>
-            </div>
             </div>
             <div class="counter">
                 <div class="counter__number">
-                    986
+                    {{ 986 - count }}
                 </div>
                 <div class="counter__label">
                     Places left
@@ -114,6 +120,11 @@ export default {
     setup() {
     let count = ref(0);
     let email = ref("");
+    const form = {
+        inputForm: true,
+        loadingForm: false,
+        successfulForm: false
+    }
     let position = 0;
     let play = 0;
     const submit = () => {
@@ -124,6 +135,8 @@ export default {
             body: formData,
         }).then(async response => {
             if(response.ok) {
+                form.inputForm.value = false;
+                form.loadingForm.value = true;
                 let data = await response.json();
                 if (data.result) {
                     alert("Данный email уже добавлен");
@@ -134,6 +147,8 @@ export default {
                     }).then(async (response) => {
                         let data = await response.json();
                         console.log(data)
+                        form.loadingForm.value = false;
+                        form.successfulForm.value = true;
                     })
                 }
                 fetch("/count_emails.php", {
@@ -188,6 +203,7 @@ export default {
         email,
         submit,
         bgVideo,
+        form,
         count
     }
 }
@@ -301,7 +317,7 @@ body {
     line-height: 26px;
 }
 
-.users-form {
+.users-form, .users-form__loading, .users-form__succsessful{
     background: radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0) 10px, rgba(18, 18, 18, 0.7) 8px),
     radial-gradient(circle at 100% 0%, rgba(0, 0, 0, 0) 10px, rgba(18, 18, 18, 0.7) 8px);
     background-position: bottom right, top right;
@@ -312,7 +328,9 @@ body {
     border-bottom-left-radius: 25px;
     padding: 20px;
 }
-
+.users-form__loading, .users-form__succsessful {
+    height: 220px;
+}
 .users-form-loadingForm {
     display: flex;
     justify-content: center;
@@ -322,37 +340,60 @@ body {
     line-height: 27px;
     width: 100%;
     height: 100%;
+    color: #E8EBEB;
     
     
 }
-.registration-form__label {
+.registration-form__label .users-form__success-title {
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
+    flex-direction: row;
     font-weight: 700;
     font-size: 21px;
     line-height: 27px;
+    width: 100%;
 
 }
-.registration-form__label2 {
+.users-form__subtitle {
     display: flex;
+    flex-direction: row;
     font-weight: 400;
     font-size: 16px;
     line-height: 26px;
+
 }
 
 
 .users-form-successfulForm {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     font-weight: 700;
     font-size: 21px;
     line-height: 27px;
     width: 100%;
     height: 100%;
-    
+    color: #E8EBEB;
 
+}
+
+.users-form__success-title {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 27px;
+    width: 100%;
+
+}
+.users-form__success-subtitle {
+    display: flex;
+    flex-direction: row;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
 }
 
 .counter {
