@@ -27,10 +27,22 @@
                     Incredible benefits for early students and teachers
                 </div>
                 <div class="tabs-wrapper">
-                    <div class="tab-student active">
+                    <div
+                        @click="role = 'student'"
+                        class="tab-student"
+                        :class="{
+                            'active': role === 'student'
+                        }"
+                    >
                         I'am student
                     </div>
-                    <div class="tab-teacher">
+                    <div
+                        @click="role = 'teacher'"
+                        class="tab-teacher"
+                        :class="{
+                            'active': role === 'teacher'
+                        }"
+                    >
                         I'am teacher
                     </div>
                 </div>
@@ -138,120 +150,10 @@
     </video>
 </template>
 <script>
-import {ref, onMounted, computed, reactive} from "vue"
-import { useVuelidate } from '@vuelidate/core'
-import { required, email, helpers } from '@vuelidate/validators'
+import { setup } from "./mixSetup";
 export default {
-    setup() {
-        let count = ref(0);
-
-        const state = reactive({
-            email: '',
-        })
-
-        const rules = computed(() => {
-            const localRules = {
-                email: {
-                    required: helpers.withMessage("The form must be filled in", required),
-                    email: helpers.withMessage("The form is filled incorrectly", email),
-                },
-            };
-
-            return localRules;
-        });
-
-        const v$ = useVuelidate(rules, state);
-
-        const form = reactive({
-            inputForm: true,
-            existingForm: false,
-            successfulForm: false
-        });
-
-        let position = 0;
-        let play = 0;
-        const submit = () => {
-            let formData = new FormData();
-            formData.append('email', state.email);
-            fetch("/check_email.php", {
-                method: 'POST', // or 'PUT'
-                body: formData,
-            }).then(async response => {
-                if(response.ok) {
-                    let data = await response.json();
-                    if (data.result) {
-                        form.inputForm = false;
-                        form.existingForm = true;
-                    } else {
-                        fetch("/add_email.php", {
-                            method: 'POST', // or 'PUT'
-                            body: formData,
-                        }).then(async (response) => {
-                            let data = await response.json();
-                            console.log(data)
-                            form.inputForm = false;
-                            form.existingForm = false;
-                            form.successfulForm = true;
-                        })
-                    }
-                    fetch("/count_emails.php", {
-                        method: 'get', // or 'PUT'
-                    }).then(async (response) => {
-                        let data = await response.json();
-                        count.value = data.result.count;
-                    })
-                }
-
-            })
-        }
-
-        let nextVideo = () => {
-            position++;
-            if (position >= playlist.length) {
-                position = 0;
-            }
-            bgVideo.value.src = playlist[position];
-            bgVideo.value.load();
-            bgVideo.value.play();
-        };
-
-        let playlist = ["/video/1mobile.mp4",
-            "/video/2mobile.mp4",
-            "/video/3mobile.mp4",
-            "/video/4mobile.mp4",
-            "/video/5mobile.mp4",
-            "/video/6mobile.mp4",
-            "/video/7mobile.mp4",
-            "/video/8mobile.mp4",
-            "/video/9mobile.mp4"];
-        let bgVideo = ref(null);
-
-        onMounted(() => {
-            setTimeout(() => {
-                bgVideo.value.addEventListener("ended", nextVideo, false);
-                bgVideo.value.src = playlist[position];
-                bgVideo.value.load();
-                bgVideo.value.play();
-            }, 1000);
-
-            fetch("/count_emails.php", {
-                method: 'get', // or 'PUT'
-            }).then(async (response) => {
-                let data = await response.json();
-                count.value = data.result.count;
-            })
-        })
-
-        return {
-            state, v$,
-            email,
-            submit,
-            bgVideo,
-            form,
-            count
-        }
-    }
-}
+    setup,
+};
 </script>
 <style>
 @font-face {
@@ -493,6 +395,7 @@ body {
     justify-content: center;
     align-items: center;
     color: #fff;
+    cursor: pointer;
 }
 
 .tab-teacher {
@@ -506,6 +409,7 @@ body {
     justify-content: center;
     align-items: center;
     color: #fff;
+    cursor: pointer;
 }
 
 .active {
@@ -562,6 +466,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 16px;
+    padding-bottom: 2px;
     gap: 8px;
     font-weight: 700;
     font-size: 16px;
@@ -578,12 +483,11 @@ body {
     display: flex;
     flex-wrap: nowrap;
     background-color: transparent;
-    justify-content: center;
+    justify-content: space-between;
     align-content: flex-end;
     position: fixed;
     bottom: 0;
     width: 100%;
-
 
 }
 
@@ -594,7 +498,6 @@ body {
     height: 30vh;
     bottom: 0px;
     margin-bottom: -15vh;
-
 
 }
 
@@ -611,16 +514,17 @@ body {
     margin: 2rem;
 }
 .footer__card-2 {
-    margin: 1.5rem;
+    margin: 1rem;
 }
 .footer__card:first-child {
     margin-left: 0;
 }
 
 .footer__card-1 {
+    position: absolute;
     z-index: 120;
     width: 100%;
-    height: 100%;
+    height: 90%;
     background: url("/images/photography.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -640,7 +544,8 @@ body {
 .footer__card-2 {
     position: absolute;
     z-index: 90;
-    width: 100%;
+    margin-top: 0vh;
+    width: 110%;
     height: 100%;
     left: -10%;
     background-image: url("/images/painting.svg");
@@ -685,7 +590,7 @@ body {
 .footer__card-4 {
     position: absolute;
     z-index: 140;
-    width: 110%;
+    width: 100%;
     height: 100%;
     margin-left: -25%;
     background-image: url("/images/painting.svg");
@@ -707,7 +612,7 @@ body {
 .footer__card-5 {
     position: absolute;
     z-index: 150;
-    width: 100%;
+    width: 110%;
     height: 100%;
     margin-left: -15%;
     background-size: contain;
@@ -750,7 +655,7 @@ body {
 .footer__card-7 {
     position: absolute;
     z-index: 0;
-    width: 120%;
+    width: 110%;
     height: 100%;
     margin-left: -10%;
     background-image: url("/images/painting.svg");
@@ -798,7 +703,7 @@ body {
 .footer__card-9 {
     position: absolute;
     z-index: 90;
-    width: 100%;
+    width: 110%;
     height: 100%;
     margin-left: 10%;
     background-image: url("/images/card3D.svg");

@@ -25,13 +25,25 @@
                         <p><span>Incredible benefits</span> for early students and teachers</p>
                     </div>
                     <div class="tabs-wrapper">
-                        <div class="tab-student active">
+                        <div
+                            @click="role = 'student'"
+                            class="tab-student"
+                            :class="{
+                            'active': role === 'student'
+                        }"
+                        >
                             I'am student
                         </div>
-                        <div class="tab-teacher">
-                            I'am teacher 
-                        </div>          
-                    </div>    
+                        <div
+                            @click="role = 'teacher'"
+                            class="tab-teacher"
+                            :class="{
+                            'active': role === 'teacher'
+                        }"
+                        >
+                            I'am teacher
+                        </div>
+                    </div>
                     <div class="content-wrapper--mobile">
                         <input type="email" v-model="v$.email.$model">
                         <div class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
@@ -96,22 +108,34 @@
                     <div class="footer__card-1--mobile"></div>             
                 </div> 
                 <div class="footer__card--mobile">
-                    <div class="footer__card-2--mobile"></div> 
+                    <div class="footer__card-2--mobile">
+                        <p>Digital</p>
+                    </div>
                 </div>
                 <div class="footer__card--mobile">
-                    <div class="footer__card-3--mobile"></div> 
+                    <div class="footer__card-3--mobile">
+                        <p>3D</p>
+                    </div>
                 </div>
                 <div class="footer__card--mobile">
-                    <div class="footer__card-4--mobile"></div>  
+                    <div class="footer__card-4--mobile">
+                        <p>Painting</p>
+                    </div>
                 </div>
                 <div class="footer__card--mobile">
-                    <div class="footer__card-5--mobile"></div> 
+                    <div class="footer__card-5--mobile">
+                        <p>Art</p>
+                    </div>
                 </div>
                 <div class="footer__card--mobile">
-                    <div class="footer__card-6--mobile"></div>  
+                    <div class="footer__card-6--mobile">
+                        <p>Craft</p>
+                    </div>
                 </div>
                 <div class="footer__card--mobile">
-                    <div class="footer__card-7--mobile"></div> 
+                    <div class="footer__card-7--mobile">
+                        <p>Sculpture</p>
+                    </div>
                 </div>
                 <div class="footer__card--mobile">
                     <div class="footer__card-8--mobile"></div>  
@@ -123,120 +147,10 @@
         </video>
 </template>
 <script>
-import {ref, onMounted, computed, reactive} from "vue"
-import { useVuelidate } from '@vuelidate/core'
-import { required, email, helpers } from '@vuelidate/validators'
+import { setup } from "./mixSetup";
 export default {
-    setup() {
-        let count = ref(0);
-
-        const state = reactive({
-            email: '',
-        })
-
-        const rules = computed(() => {
-            const localRules = {
-                email: {
-                    required: helpers.withMessage("The form must be filled in", required),
-                    email: helpers.withMessage("The form is filled incorrectly", email),
-                },
-            };
-
-            return localRules;
-        });
-
-        const v$ = useVuelidate(rules, state);
-
-        const form = reactive({
-            inputForm: true,
-            existingForm: false,
-            successfulForm: false
-        });
-
-        let position = 0;
-        let play = 0;
-        const submit = () => {
-            let formData = new FormData();
-            formData.append('email', state.email);
-            fetch("/check_email.php", {
-                method: 'POST', // or 'PUT'
-                body: formData,
-            }).then(async response => {
-                if(response.ok) {
-                    let data = await response.json();
-                    if (data.result) {
-                        form.inputForm = false;
-                        form.existingForm = true;
-                    } else {
-                        fetch("/add_email.php", {
-                            method: 'POST', // or 'PUT'
-                            body: formData,
-                        }).then(async (response) => {
-                            let data = await response.json();
-                            console.log(data)
-                            form.inputForm = false;
-                            form.existingForm = false;
-                            form.successfulForm = true;
-                        })
-                    }
-                    fetch("/count_emails.php", {
-                        method: 'get', // or 'PUT'
-                    }).then(async (response) => {
-                        let data = await response.json();
-                        count.value = data.result.count;
-                    })
-                }
-
-            })
-        }
-
-        let nextVideo = () => {
-            position++;
-            if (position >= playlist.length) {
-                position = 0;
-            }
-            bgVideo.value.src = playlist[position];
-            bgVideo.value.load();
-            bgVideo.value.play();
-        };
-
-        let playlist = ["/video/1mobile.mp4",
-            "/video/2mobile.mp4",
-            "/video/3mobile.mp4",
-            "/video/4mobile.mp4",
-            "/video/5mobile.mp4",
-            "/video/6mobile.mp4",
-            "/video/7mobile.mp4",
-            "/video/8mobile.mp4",
-            "/video/9mobile.mp4"];
-        let bgVideo = ref(null);
-
-        onMounted(() => {
-            setTimeout(() => {
-                bgVideo.value.addEventListener("ended", nextVideo, false);
-                bgVideo.value.src = playlist[position];
-                bgVideo.value.load();
-                bgVideo.value.play();
-            }, 1000);
-
-            fetch("/count_emails.php", {
-                method: 'get', // or 'PUT'
-            }).then(async (response) => {
-                let data = await response.json();
-                count.value = data.result.count;
-            })
-        })
-
-        return {
-            state, v$,
-            email,
-            submit,
-            bgVideo,
-            form,
-            count
-        }
-    }
-}
+    setup,
+};
 </script>
 <style>
 
@@ -462,6 +376,7 @@ body {
     justify-content: center;
     align-items: center;
     color: #fff;
+    cursor: pointer;
 
 }
 .tab-teacher {
@@ -475,8 +390,7 @@ body {
     justify-content: center;
     align-items: center;
     color: #fff;
-
-
+    cursor: pointer;
 }
 .active {
     background: #76B525;
@@ -518,6 +432,15 @@ body {
 .content-wrapper input:focus {
     outline: none !important;
     border-color: #414141;
+
+}
+.button__submit {
+    font-family: 'Onest';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 26px;
+    gap: 0.5em;
 }
 .users-form--mobile button {
     display: flex;
@@ -542,153 +465,207 @@ body {
 }
 .footer--mobile {
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    flex-wrap: nowrap;
+    background-color: transparent;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+
 }
 
 .footer__cards--mobile {
-    position: absolute;
-    bottom: 0px;
     display: flex;
     width: 100%;
-    height: 20vh;
+    height: 100%;
     align-items: flex-end;
-    justify-content: flex-start;
+    justify-content: space-between;
     overflow: hidden;
+
 
 }
 .footer__card--mobile {
-    position: absolute;
     display: flex;
     margin-left: 0px;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: flex-end;
+
+}
+.footer__card--mobile p {
+    margin: 1rem;
 }
 .footer__card-1--mobile {
     position: absolute;
+    margin-bottom: -2vh;
     width: 140px;
-    height: 145px;
-    left: -50px;
+    height: 168px;
+    border-radius: 24px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000000;
     background-image: url("/images/redcard-mobile-pic.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    background: #FF1A53;
+    border-radius: 24px;
+    transform: rotate(19.31deg);
 
 }
 .footer__card-1--mobile:hover {
     transform: scale(1.2)
 }
 .footer__card-2--mobile {
-    left: 0px;
     z-index: 100;
-    bottom: -80px;
+    margin-bottom: -9vh;
     position: absolute;
-    width: 126px;
+    width: 106px;
     height: 130px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000000;
     background-image: url("/images/digital-mobile-pic.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    background: #7FDD06;
+    border-radius: 16px;
+    transform: rotate(13.6deg);
 
 }
+
 .footer__card-2--mobile:hover {
     transform: scale(1.2)
+    
 }
 .footer__card-3--mobile {
-    left: 45px;
     z-index: 80;
-    bottom: -60px;
+    margin-bottom: -4vh;
     position: absolute;
     width: 140px;
-    height: 155px;
+    height: 168px;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
+    color: #FFFFFF;
     background-image: url("/images/card3D-mobile-pic.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
-    transition: all .5s ease;   
+    transition: all .5s ease;
+    background: rgba(18, 18, 18, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    transform: rotate(-9.29deg);
 }
 .footer__card-3--mobile:hover {
     transform: scale(1.2)
 }
 .footer__card-4--mobile {
-    left: 120px;
-    z-index: 90;
-    bottom: -105px;
+    z-index: 120;
+    margin-bottom: -10vh;
     position: absolute;
     width: 130px;
-    height: 155px;
-    background-image: url("/images/painting-mobile-pic.svg");
+    height: 168px;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
+    color: #FFFFFF;
+    border-radius: 24px;
+    background: linear-gradient(179.27deg, rgba(0, 0, 0, 0.7) 3.55%, rgba(0, 0, 0, 0) 65.43%), url("/images/painting-mobile-pic.svg") no-repeat top center;
     background-size: contain;
-    background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
-    transition: all .5s ease;   
+    transition: all .5s ease;
+
 }
 .footer__card-4--mobile:hover {
     transform: scale(1.2)
 }
 .footer__card-5--mobile {
-    left: 160px;
     z-index: 70;
-    bottom: -50px;
+    margin-bottom: -2vh;
     position: absolute;
     width: 140px;
-    height: 155px;
+    height: 168px;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
+    color: #FFFFFF;
     background-image: url("/images/art-mobile-pic.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
-    transition: all .5s ease;   
+    transition: all .5s ease;
+    background: #1B53D6;
+    border-radius: 24px;
+    transform: rotate(10deg);
 
 }
 .footer__card-5--mobile:hover {
     transform: scale(1.2)
 }
 .footer__card-6--mobile {
-    left: 300px;
     z-index: 100;
-    bottom: -70px;
+    margin-bottom: -5vh;
     position: absolute;
-    width: 126px;
-    height: 130px;
-    background-image: url("/images/sculpture-mobile-pic.svg");
+    width: 140px;
+    height: 168px;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
+    color: #FFFFFF;
+    background-image: url("/images/craft-mobile-pic.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
-    transition: all .5s ease;   
+    transition: all .5s ease;
+    background: #F45E41;
+    border-radius: 24px;
+    transform: rotate(-3.42deg);
 }
 .footer__card-6--mobile:hover {
     transform: scale(1.2)
 }
 .footer__card-7--mobile {
-    left: 230px;
-    z-index: 80;
-    bottom: -70px;
+    z-index: 110;
+    margin-bottom: -8vh;
     position: absolute;
-    width: 140px;
-    height: 155px;
-    background-image: url("/images/craft-mobile-pic.svg");
+    width: 106px;
+    height: 130px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #FFFFFF;
+    background-image: url("/images/sculpture-mobile-pic.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
-    transition: all .5s ease;   
+    transition: all .5s ease;
+    border-radius: 16px;
+    transform: rotate(5.38deg);
 }
 .footer__card-7--mobile:hover {
     transform: scale(1.2)
 }
 .footer__card-8--mobile {
-    position: absolute;
-    left: 370px;
     z-index: 10;
-    bottom: -10px;
-    width: 126px;
-    height: 130px;
+    position: absolute;
+    width: 140px;
+    height: 168px;
     background-image: url("/images/darkcard-mobile-pic.svg");
     background-size: contain;
     background-repeat: no-repeat;
     -webkit-transition: all .5s ease;
-    transition: all .5s ease;   
+    transition: all .5s ease;
+    background: rgba(18, 18, 18, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    transform: rotate(-22.3deg);
 }
 .footer__card-8--mobile:hover {
     transform: scale(1.2)
