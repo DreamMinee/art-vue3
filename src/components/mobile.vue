@@ -199,7 +199,7 @@ body {
 }
 .header--mobile {
     display: flex;
-    padding: 10px 0;
+    padding: 0px 0;
     justify-content: space-between;
     align-items: center;
     
@@ -244,7 +244,7 @@ body {
     text-align: center;
     width: 80%;
     font-weight: 400;
-    margin: 10px;
+    margin: 0px;
 }
 .registration-form--mobile {
     display: flex;
