@@ -525,6 +525,8 @@ body {
     z-index: 120;
     width: 100%;
     height: 90%;
+    margin-left: -10%;
+    margin-top: 20%;
     background: url("/images/photography.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -538,16 +540,15 @@ body {
     color: #FFFFFF;
 }
 .footer__card-1:hover {
-    margin-top: -10%;
+    margin-top: 10%;
 
 }
 .footer__card-2 {
     position: absolute;
     z-index: 90;
-    margin-top: 0vh;
-    width: 110%;
+    width: 120%;
     height: 100%;
-    left: -10%;
+    left: -20%;
     background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -571,7 +572,7 @@ body {
     z-index: 130;
     width: 100%;
     height: 100%;
-    margin-left: -20%;
+    margin-left: -10%;
     background-image: url("/images/drawing.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -590,9 +591,10 @@ body {
 .footer__card-4 {
     position: absolute;
     z-index: 140;
-    width: 100%;
+    width: 110%;
     height: 100%;
     margin-left: -25%;
+    margin-top: 20%;
     background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -607,12 +609,12 @@ body {
     color: #FFFFFF;
 }
 .footer__card-4:hover {
-    margin-top: -10%;
+    margin-top: 10%;
 }
 .footer__card-5 {
     position: absolute;
     z-index: 150;
-    width: 110%;
+    width: 120%;
     height: 100%;
     margin-left: -15%;
     background-size: contain;
@@ -632,10 +634,11 @@ body {
 
 .footer__card-6 {
     position: absolute;
-    z-index: 110;
+    z-index: 160;
     width: 100%;
     height: 100%;
-    margin-left: -10%;
+    margin-left: 0%;
+    margin-top: 20%;
     background-image: url("/images/design.png.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -650,12 +653,12 @@ body {
 }
 
 .footer__card-6:hover {
-    margin-top: -10%;
+    margin-top: 10%;
 }
 .footer__card-7 {
     position: absolute;
     z-index: 0;
-    width: 110%;
+    width: 120%;
     height: 100%;
     margin-left: -10%;
     background-image: url("/images/painting.svg");
@@ -683,6 +686,7 @@ body {
     width: 100%;
     height: 100%;
     margin-left: 10%;
+    margin-top: 20%;
     background-image: url("/images/sculpture.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -697,7 +701,7 @@ body {
 }
 
 .footer__card-8:hover {
-    margin-top: -10%;
+    margin-top: 10%;
 }
 
 .footer__card-9 {
@@ -705,7 +709,7 @@ body {
     z-index: 90;
     width: 110%;
     height: 100%;
-    margin-left: 10%;
+    margin-left: 0%;
     background-image: url("/images/card3D.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -728,6 +732,7 @@ body {
     z-index: 100;
     width: 100%;
     height: 100%;
+    margin-top: 20%;
     background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -743,7 +748,7 @@ body {
 }
 
 .footer__card-10:hover {
-    margin-top: -10%;
+    margin-top: 10%;
 }
 #myVideo {
     position: fixed;
