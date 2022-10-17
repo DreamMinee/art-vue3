@@ -251,6 +251,7 @@ body {
     justify-content: left;
     background-color: transparent;
     flex-direction: column;
+    margin: 0px;
 }
 .registration-form__label p {
     width: 100%;
@@ -258,6 +259,8 @@ body {
     font-weight: 700;
     font-size: 16px;
     line-height: 22px;
+    margin-bottom: 0px;
+    margin-top: 0px;
     
 }
 .registration-form__label span {
@@ -265,7 +268,6 @@ body {
 }
 .users-form--mobile {
     background:rgba(18, 18, 18, 0.7);
-    height: 320px;
     border-radius: 25px 25px 0 0;
     padding: 15px;
 }
@@ -288,9 +290,7 @@ body {
     flex-direction: row;
     width: 100%;
     justify-content: center;
-   
 
-    
 }
 .loading-form__subtitle {
     font-weight: 400;
@@ -412,13 +412,14 @@ body {
     justify-content: flex-start;
     align-items: center;
     margin: 1rem;
+    padding: 0px;
 
 }
 .content-wrapper--mobile input {
     background-color: transparent;
     border: 2px solid #414141;
     width: 100%;
-    height: 56px;
+    height: 40px;
     margin-top: 10px ;
     margin-bottom: 15px;
     padding: 0 15px;
@@ -448,8 +449,6 @@ body {
     justify-content: center;
     align-items: center;
     padding: 0;
-    margin-top: 10px;
-    margin-bottom: 15px;
     width: 100%;
     height: 50px;
     border-radius: 8px;

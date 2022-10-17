@@ -456,6 +456,7 @@ body {
     border-color: #414141;
 }
 
+
 .users-form button {
     display: flex;
     border-radius: 8px;
@@ -466,7 +467,8 @@ body {
     justify-content: center;
     align-items: center;
     padding: 16px;
-    padding-bottom: 2px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     gap: 8px;
     font-weight: 700;
     font-size: 16px;
@@ -514,7 +516,7 @@ body {
     margin: 2rem;
 }
 .footer__card-2 {
-    margin: 1rem;
+    margin: 3rem;
 }
 .footer__card:first-child {
     margin-left: 0;
@@ -548,7 +550,8 @@ body {
     z-index: 90;
     width: 120%;
     height: 100%;
-    left: -20%;
+    left: -30%;
+    margin-top: -20%;
     background-image: url("/images/painting.svg");
     background-size: contain;
     background-repeat: no-repeat;
